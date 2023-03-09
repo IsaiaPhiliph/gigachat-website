@@ -1,5 +1,6 @@
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
+import prisma from "@/lib/prisma";
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -9,7 +10,7 @@ export async function POST(request: Request) {
     });
   }
   const json = await request.json();
-  const response = await prisma?.conversation.create({
+  const response = await prisma.conversation.create({
     data: {
       userId: session.user.id,
       name: json.name,
