@@ -46,11 +46,21 @@ export default function Chat({
       console.error("completions url missing!");
       return;
     }
-    const sessionToken = document.cookie;
+    const cookies: { [key: string]: string } = document.cookie
+      .split("; ")
+      .reduce((prev, curr) => {
+        const [key, value] = curr.split("=");
+        return { ...prev, [key]: value };
+      }, {});
+    const sessionToken = cookies["next-auth.session-token"];
+
     await fetchEventSource(completionsUrl, {
       method: "POST",
       credentials: "include",
-      body: JSON.stringify([...messages, newMessage]),
+      body: JSON.stringify({
+        token: sessionToken,
+        messages: [...messages, newMessage],
+      }),
       onopen: async function (res) {
         console.log("Connection to sse open");
         setReceivingMessage(true);
