@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 
 const tokenizer = new GPT3Tokenizer({ type: "gpt3" });
 
+const completionsUrl = process.env.NEXT_PUBLIC_COMPLETIONS_API_URL;
+
 export default function Chat({
   initialMessages,
   conversationId,
@@ -40,8 +42,13 @@ export default function Chat({
     const newMessage = { role: "user", content: message } as const;
     setMessages((prev) => [...prev, newMessage]);
     let responseContent = "";
-    await fetchEventSource("/api/completions", {
+    if (!completionsUrl) {
+      console.error("completions url missing!");
+      return;
+    }
+    await fetchEventSource(completionsUrl, {
       method: "POST",
+      credentials: "include",
       body: JSON.stringify([...messages, newMessage]),
       onopen: async function (res) {
         console.log("Connection to sse open");
@@ -106,7 +113,7 @@ export default function Chat({
       {session?.user && (
         <div className="flex flex-col gap-4">
           {messages.length > 0 && (
-            <div className="bg-blue-300 dark:bg-gray-700 shadow-md rounded-lg p-4 flex flex-col gap-4">
+            <div className="flex flex-col gap-4 p-4 bg-blue-300 rounded-lg shadow-md dark:bg-gray-700">
               {messages.map((message, index) => (
                 <ChatMessage
                   key={index}
@@ -118,7 +125,7 @@ export default function Chat({
               {receivingMessage && (
                 <ChatMessage role="assistant" content={currentMessage} />
               )}
-              <span className="bg-blue-100 dark:bg-gray-600 px-4 rounded-sm self-center">
+              <span className="self-center px-4 bg-blue-100 rounded-sm dark:bg-gray-600">
                 Tokens: {totalTokens}/4096
               </span>
             </div>
