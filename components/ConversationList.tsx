@@ -11,7 +11,7 @@ export default function ConversationList(props: {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col py-2 bg-blue-400 dark:bg-gray-900">
+    <div className="flex flex-col py-2 max-w-[200px] bg-blue-400 dark:bg-gray-900">
       <CreateConversationButton />
       {props.conversations.map((conversation) => (
         <Link
