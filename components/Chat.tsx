@@ -46,6 +46,18 @@ export default function Chat({
       console.error("completions url missing!");
       return;
     }
+
+    if (messages.length === 0) {
+      await fetch("/api/summarizeConversation", {
+        method: "POST",
+        body: JSON.stringify({
+          messages: [newMessage],
+          conversationId,
+        }),
+      });
+      router.refresh();
+    }
+
     const cookies: { [key: string]: string } = document.cookie
       .split("; ")
       .reduce((prev, curr) => {
@@ -97,19 +109,6 @@ export default function Chat({
               conversationId,
             }),
           });
-          if (messages.length === 0) {
-            await fetch("/api/summarizeConversation", {
-              method: "POST",
-              body: JSON.stringify({
-                messages: [
-                  newMessage,
-                  { role: "assistant", content: responseContent },
-                ],
-                conversationId,
-              }),
-            });
-            router.refresh();
-          }
         }
         if (!responseContent) {
           alert(

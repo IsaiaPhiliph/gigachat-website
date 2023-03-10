@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         {
           role: "user",
           content:
-            "Resume esta conversación muy brevemente, en 2 o 3 palabras como mucho, no digas nada más, solo devuelve las 2 o 3 palabras correspondientes al resumen",
+            "Resume mi mensaje anterior, muy brevemente, en 2 o 3 palabras como mucho, no digas nada más, solo escribe las 2 o 3 palabras correspondientes al resumen",
         },
       ],
     }),
