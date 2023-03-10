@@ -25,6 +25,17 @@ export const authOptions: AuthOptions = {
       return Promise.resolve(session);
     },
   },
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: false,
+        sameSite: "lax",
+        path: "/",
+        secure: true,
+      },
+    },
+  },
 };
 
 export default NextAuth(authOptions);

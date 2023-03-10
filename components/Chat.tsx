@@ -46,6 +46,7 @@ export default function Chat({
       console.error("completions url missing!");
       return;
     }
+    const sessionToken = document.cookie;
     await fetchEventSource(completionsUrl, {
       method: "POST",
       credentials: "include",
