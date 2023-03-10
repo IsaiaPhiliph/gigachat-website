@@ -48,14 +48,15 @@ export default function Chat({
     }
 
     if (messages.length === 0) {
-      await fetch("/api/summarizeConversation", {
+      fetch("/api/summarizeConversation", {
         method: "POST",
         body: JSON.stringify({
           messages: [newMessage],
           conversationId,
         }),
+      }).then(() => {
+        router.refresh();
       });
-      router.refresh();
     }
 
     const cookies: { [key: string]: string } = document.cookie
